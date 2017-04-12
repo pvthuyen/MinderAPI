@@ -1,5 +1,6 @@
 class ProfilesController < ApplicationController
 	skip_before_action :verify_authenticity_token
+	helper GeometryHelper
 	def create
 		profile = Profile.find_or_create_by(params.permit(:facebook_id, :origin_lat, :origin_lng, :destination_lat, :destination_lng))
 		render json: profile
@@ -14,6 +15,8 @@ class ProfilesController < ApplicationController
 
 	def is_matched(other_profile)
 		profile = Profile.find(params[:profile_id])
+		distance = helpers.distance([profile.origin_lat, profile.origin_lng], [other_profile.origin_lat, other_profile.origin_lng])
+		puts distance
 		if other_profile.id == 2
 			return true
 		end
