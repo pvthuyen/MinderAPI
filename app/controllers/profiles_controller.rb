@@ -2,9 +2,15 @@ class ProfilesController < ApplicationController
 	skip_before_action :verify_authenticity_token
 	helper GeometryHelper
 	def create
-		profile = Profile.find_or_create_by(params.permit(:facebook_id, :origin_lat, :origin_lng, :destination_lat, :destination_lng))
+        profile = Profile.find_or_create_by(params.permit(:facebook_id, :name, :DOB, :gender))
 		render json: profile
 	end
+
+    def edit_travel_info
+        profile = Profile.find(params[:profile_id])
+        profile.update_attributes bike: params[:bike], origin_lat: params[:origin_lat], origin_lng: params[:origin_lng], destination_lat: params[:destination_lat], destination_lng: params[:destination_lng]
+        render json: profile
+    end
 
 	def matches
 		profiles = Profile.all
